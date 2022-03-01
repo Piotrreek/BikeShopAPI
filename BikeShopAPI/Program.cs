@@ -1,5 +1,9 @@
+using System.Reflection;
 using BikeShopAPI.Entities;
+using BikeShopAPI.Interfaces;
 using BikeShopAPI.Others;
+using BikeShopAPI.Services;
+using BikeShopAPI.Middleware;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -10,10 +14,18 @@ builder.Services.AddControllers();
 
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
+
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+builder.Services.AddAutoMapper(Assembly.GetExecutingAssembly());
+builder.Services.AddScoped<ErrorHandlingMiddleware>();
+
+
 builder.Services.AddDbContext<BikeShopDbContext>();
 builder.Services.AddScoped<BikeShopSeeder>();
+builder.Services.AddScoped<IBikeShopService, BikeShopService>();
+
+
 
 var app = builder.Build();
 
@@ -30,6 +42,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
+app.UseMiddleware<ErrorHandlingMiddleware>();
 app.UseHttpsRedirection();
 
 app.UseAuthorization();
