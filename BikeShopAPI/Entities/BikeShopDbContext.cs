@@ -5,9 +5,9 @@ namespace BikeShopAPI.Entities
     public class BikeShopDbContext : DbContext
     {
         private string _connectionString = "Server=(localdb)\\mssqllocaldb;Database=BikeShopDb;Trusted_Connection=True;";
-        public DbSet<BikeShop>? BikeShops { get; set; }
+        public DbSet<BikeShop> BikeShops { get; set; }
         public DbSet<Bike>? Bikes { get; set; }
-        public DbSet<Address>? Addresses { get; set; }
+        public DbSet<Address> Addresses { get; set; }
         public DbSet<Bag>? Bags { get; set; }
         public DbSet<Product>? Products { get; set; }
         public DbSet<Specification>? Specifications { get; set; }

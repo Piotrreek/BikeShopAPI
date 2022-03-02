@@ -32,5 +32,29 @@ namespace BikeShopAPI.Services
             var shopDto = _mapper.Map<BikeShopDto>(shop);
             return shopDto;
         }
+
+        public List<BikeShopDto> GetAll()
+        {
+            var shops = _context
+                .BikeShops
+                .Include(s => s.Address)
+                .Include(s => s.Bikes)
+                .ToList();
+            if (shops is null)
+            {
+                throw new NotFoundException("Bike shops not found");
+            }
+
+            var shopsDto = _mapper.Map<List<BikeShopDto>>(shops);
+            return shopsDto;
+        }
+
+        public int Create(CreateBikeShopDto dto)
+        {
+            var bikeShop = _mapper.Map<BikeShop>(dto);
+            _context.Add(bikeShop);
+            _context.SaveChanges();
+            return bikeShop.Id;
+        }
     }
 }

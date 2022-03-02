@@ -4,13 +4,17 @@ using BikeShopAPI.Interfaces;
 using BikeShopAPI.Others;
 using BikeShopAPI.Services;
 using BikeShopAPI.Middleware;
+using BikeShopAPI.Models;
+using BikeShopAPI.Models.Validators;
+using FluentValidation;
+using FluentValidation.AspNetCore;
 
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 
-builder.Services.AddControllers();
+builder.Services.AddControllers().AddFluentValidation();
 
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
@@ -19,6 +23,7 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddAutoMapper(Assembly.GetExecutingAssembly());
 builder.Services.AddScoped<ErrorHandlingMiddleware>();
+builder.Services.AddScoped<IValidator<CreateBikeShopDto>, CreateBikeShopDtoValidator>();
 
 
 builder.Services.AddDbContext<BikeShopDbContext>();

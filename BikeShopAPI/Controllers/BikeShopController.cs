@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace BikeShopAPI.Controllers
 {
     [Route("shop")]
-    //[ApiController]
+    [ApiController]
     public class BikeShopController : ControllerBase
     {
         private readonly IBikeShopService _bikeShopService;
@@ -20,6 +20,21 @@ namespace BikeShopAPI.Controllers
             var shop = _bikeShopService.GetById(id);
             return Ok(shop);
         }
+
+        [HttpGet]
+        public ActionResult<List<BikeShopDto>> GetAllShops()
+        {
+            var shops = _bikeShopService.GetAll();
+            return Ok(shops);
+        }
+
+        [HttpPost]
+        public ActionResult CreateBikeShop([FromBody] CreateBikeShopDto dto)
+        {
+            var id = _bikeShopService.Create(dto);
+            return Created($"shop/{id}", null);
+        }
+
 
 
     }

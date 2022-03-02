@@ -12,6 +12,12 @@ namespace BikeShopAPI.Others
                 .ForMember(s => s.City, c => c.MapFrom(m => m.Address.City))
                 .ForMember(s => s.PostalCode, c => c.MapFrom(m => m.Address.PostalCode))
                 .ForMember(s => s.Street, c => c.MapFrom(m => m.Address.Street));
+            CreateMap<CreateBikeShopDto, BikeShop>()
+                .ForMember(s => s.Address,
+                    c => c.MapFrom(dto => new Address()
+                    {
+                        City = dto.City, PostalCode = dto.PostalCode, Street = dto.Street
+                    }));
         }
     }
 }
