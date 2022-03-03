@@ -35,7 +35,18 @@ namespace BikeShopAPI.Controllers
             return Created($"shop/{id}", null);
         }
 
+        [HttpDelete("{id}")]
+        public ActionResult DeleteBikeShop([FromRoute] int id)
+        {
+            _bikeShopService.Delete(id);
+            return NoContent();
+        }
 
-
+        [HttpPatch("{id}")]
+        public ActionResult UpdateBikeShop([FromRoute] int id, [FromBody] UpdateBikeShopDto dto)
+        {
+            _bikeShopService.Update(id, dto);
+            return Ok();
+        }
     }
 }

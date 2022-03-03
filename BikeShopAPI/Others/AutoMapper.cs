@@ -18,6 +18,7 @@ namespace BikeShopAPI.Others
                     {
                         City = dto.City, PostalCode = dto.PostalCode, Street = dto.Street
                     }));
+            CreateMap<UpdateBikeShopDto, BikeShop>();
         }
     }
 }

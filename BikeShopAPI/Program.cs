@@ -24,6 +24,7 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddAutoMapper(Assembly.GetExecutingAssembly());
 builder.Services.AddScoped<ErrorHandlingMiddleware>();
 builder.Services.AddScoped<IValidator<CreateBikeShopDto>, CreateBikeShopDtoValidator>();
+builder.Services.AddScoped<IValidator<UpdateBikeShopDto>, UpdateBikeShopDtoValidator>();
 
 
 builder.Services.AddDbContext<BikeShopDbContext>();

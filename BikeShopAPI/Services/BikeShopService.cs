@@ -56,5 +56,29 @@ namespace BikeShopAPI.Services
             _context.SaveChanges();
             return bikeShop.Id;
         }
+
+        public void Delete(int id)
+        {
+            var bikeShopToDelete = _context.BikeShops
+                .FirstOrDefault(s => s.Id == id);
+            if (bikeShopToDelete is null)
+            {
+                throw new NotFoundException("Bike shop not found");
+            }
+            _context.Remove(bikeShopToDelete);
+            _context.SaveChanges();
+        }
+
+        public void Update(int id, UpdateBikeShopDto dto)
+        {
+            var bikeShopToUpdate = _context.BikeShops
+                .FirstOrDefault(s => s.Id == id);
+            if (bikeShopToUpdate is null)
+            {
+                throw new NotFoundException("Bike shop not found");
+            }
+            bikeShopToUpdate = _mapper.Map(dto, bikeShopToUpdate);
+            _context.SaveChanges();
+        }
     }
 }
