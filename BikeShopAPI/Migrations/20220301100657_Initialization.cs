@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore.Migrations;
 
-#nullable disable
+#nullable enable
 
 namespace BikeShopAPI.Migrations
 {

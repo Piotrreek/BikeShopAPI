@@ -25,11 +25,14 @@ builder.Services.AddAutoMapper(Assembly.GetExecutingAssembly());
 builder.Services.AddScoped<ErrorHandlingMiddleware>();
 builder.Services.AddScoped<IValidator<CreateBikeShopDto>, CreateBikeShopDtoValidator>();
 builder.Services.AddScoped<IValidator<UpdateBikeShopDto>, UpdateBikeShopDtoValidator>();
+builder.Services.AddScoped<IValidator<CreateBikeDto>, CreateBikeDtoValidator>();
+builder.Services.AddScoped<IValidator<UpdateBikeDto>, UpdateBikeDtoValidator>();
 
 
 builder.Services.AddDbContext<BikeShopDbContext>();
 builder.Services.AddScoped<BikeShopSeeder>();
 builder.Services.AddScoped<IBikeShopService, BikeShopService>();
+builder.Services.AddScoped<IBikeService, BikeService>();
 
 
 

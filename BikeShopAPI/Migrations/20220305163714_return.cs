@@ -4,7 +4,7 @@
 
 namespace BikeShopAPI.Migrations
 {
-    public partial class PriceChange : Migration
+    public partial class @return : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {

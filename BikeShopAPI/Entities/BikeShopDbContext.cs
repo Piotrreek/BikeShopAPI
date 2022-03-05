@@ -7,7 +7,7 @@ namespace BikeShopAPI.Entities
         private string _connectionString = "Server=(localdb)\\mssqllocaldb;Database=BikeShopDb;Trusted_Connection=True;";
         public DbSet<BikeShop> BikeShops { get; set; }
         public DbSet<Bike>? Bikes { get; set; }
-        public DbSet<Address> Addresses { get; set; }
+        public DbSet<Address>? Addresses { get; set; }
         public DbSet<Bag>? Bags { get; set; }
         public DbSet<Product>? Products { get; set; }
         public DbSet<Specification>? Specifications { get; set; }
@@ -28,9 +28,7 @@ namespace BikeShopAPI.Entities
                 .HasMaxLength(15);
             modelBuilder.Entity<Bike>()
                 .Property(b => b.Price)
-                .IsRequired()
-                .HasMaxLength(6)
-                .HasPrecision(2);
+                .IsRequired();
             modelBuilder.Entity<Bike>()
                 .Property(b => b.Count)
                 .IsRequired()
@@ -54,8 +52,7 @@ namespace BikeShopAPI.Entities
                 .IsRequired();
             modelBuilder.Entity<Bag>()
                 .Property(b => b.Price)
-                .IsRequired()
-                .HasPrecision(2);
+                .IsRequired();
             modelBuilder.Entity<Product>()
                 .Property(p => p.Name)
                 .IsRequired();
@@ -64,9 +61,8 @@ namespace BikeShopAPI.Entities
                 .IsRequired();
             modelBuilder.Entity<Product>()
                 .Property(p => p.Price)
-                .IsRequired()
-                .HasPrecision(2);
-                
+                .IsRequired();
+
             modelBuilder.Entity<Product>()
                 .Property(p => p.Brand)
                 .IsRequired();

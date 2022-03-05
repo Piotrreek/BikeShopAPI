@@ -7,8 +7,7 @@ using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
-#nullable disable
-
+#nullable enable
 namespace BikeShopAPI.Migrations
 {
     [DbContext(typeof(BikeShopDbContext))]
@@ -75,7 +74,7 @@ namespace BikeShopAPI.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<decimal?>("Price")
+                    b.Property<string?>("Price")
                         .IsRequired()
                         .HasColumnType("decimal(18,2)");
 
@@ -114,7 +113,7 @@ namespace BikeShopAPI.Migrations
                         .HasMaxLength(15)
                         .HasColumnType("nvarchar(15)");
 
-                    b.Property<decimal?>("Price")
+                    b.Property<string?>("Price")
                         .IsRequired()
                         .HasMaxLength(6)
                         .HasColumnType("decimal(18,2)");
@@ -187,7 +186,7 @@ namespace BikeShopAPI.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<decimal?>("Price")
+                    b.Property<string?>("Price")
                         .IsRequired()
                         .HasColumnType("decimal(18,2)");
 

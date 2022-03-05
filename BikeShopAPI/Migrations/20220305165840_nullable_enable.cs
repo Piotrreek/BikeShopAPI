@@ -1,10 +1,10 @@
 ﻿using Microsoft.EntityFrameworkCore.Migrations;
 
-#nullable enable
+#nullable disable
 
 namespace BikeShopAPI.Migrations
 {
-    public partial class PriceChange : Migration
+    public partial class nullable_enable : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {

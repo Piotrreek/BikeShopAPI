@@ -1,4 +1,6 @@
-﻿namespace BikeShopAPI.Middleware
+﻿using BikeShopAPI.Exceptions;
+
+namespace BikeShopAPI.Middleware
 {
     public class ErrorHandlingMiddleware : IMiddleware
     {
@@ -13,10 +15,15 @@
                 context.Response.StatusCode = 404;
                 await context.Response.WriteAsync(notFoundException.Message);
             }
+            catch (OutOfStockException outOfStockException)
+            {
+                context.Response.StatusCode = 200;
+                await context.Response.WriteAsync(outOfStockException.Message);
+            }
             catch (Exception e)
             {
                 context.Response.StatusCode = 500;
-                await context.Response.WriteAsync("Something went wrong");
+                await context.Response.WriteAsync(e.Message);
             }
         }
     }

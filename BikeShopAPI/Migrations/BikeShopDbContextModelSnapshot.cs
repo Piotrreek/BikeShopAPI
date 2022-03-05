@@ -45,7 +45,7 @@ namespace BikeShopAPI.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Addresses", (string)null);
+                    b.ToTable("Addresses");
                 });
 
             modelBuilder.Entity("BikeShopAPI.Entities.Bag", b =>
@@ -81,7 +81,7 @@ namespace BikeShopAPI.Migrations
 
                     b.HasIndex("BikeShopId");
 
-                    b.ToTable("Bags", (string)null);
+                    b.ToTable("Bags");
                 });
 
             modelBuilder.Entity("BikeShopAPI.Entities.Bike", b =>
@@ -114,7 +114,6 @@ namespace BikeShopAPI.Migrations
 
                     b.Property<decimal?>("Price")
                         .IsRequired()
-                        .HasMaxLength(6)
                         .HasColumnType("decimal(18,2)");
 
                     b.Property<string>("ProductionYear")
@@ -124,7 +123,7 @@ namespace BikeShopAPI.Migrations
 
                     b.HasIndex("BikeShopId");
 
-                    b.ToTable("Bikes", (string)null);
+                    b.ToTable("Bikes");
                 });
 
             modelBuilder.Entity("BikeShopAPI.Entities.BikeShop", b =>
@@ -157,7 +156,7 @@ namespace BikeShopAPI.Migrations
                     b.HasIndex("AddressId")
                         .IsUnique();
 
-                    b.ToTable("BikeShops", (string)null);
+                    b.ToTable("BikeShops");
                 });
 
             modelBuilder.Entity("BikeShopAPI.Entities.Product", b =>
@@ -193,7 +192,7 @@ namespace BikeShopAPI.Migrations
 
                     b.HasIndex("BikeShopId");
 
-                    b.ToTable("Products", (string)null);
+                    b.ToTable("Products");
                 });
 
             modelBuilder.Entity("BikeShopAPI.Entities.Specification", b =>
@@ -225,7 +224,7 @@ namespace BikeShopAPI.Migrations
 
                     b.HasIndex("BikeId");
 
-                    b.ToTable("Specifications", (string)null);
+                    b.ToTable("Specifications");
                 });
 
             modelBuilder.Entity("BikeShopAPI.Entities.Bag", b =>
