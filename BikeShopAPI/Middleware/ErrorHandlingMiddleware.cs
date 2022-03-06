@@ -20,6 +20,11 @@ namespace BikeShopAPI.Middleware
                 context.Response.StatusCode = 200;
                 await context.Response.WriteAsync(outOfStockException.Message);
             }
+            catch (NullSpecificationException nullException)
+            {
+                context.Response.StatusCode = 200;
+                await context.Response.WriteAsync(nullException.Message);
+            }
             catch (Exception e)
             {
                 context.Response.StatusCode = 500;

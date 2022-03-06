@@ -23,6 +23,7 @@ namespace BikeShopAPI.Others
             CreateMap<Specification, SpecificationDto>();
             CreateMap<CreateBikeDto, Bike>();
             CreateMap<UpdateBikeDto, Bike>();
+            CreateMap<CreateSpecificationDto, Specification>();
 
         }
     }
