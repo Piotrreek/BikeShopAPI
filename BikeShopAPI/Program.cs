@@ -28,6 +28,7 @@ builder.Services.AddScoped<IValidator<UpdateBikeShopDto>, UpdateBikeShopDtoValid
 builder.Services.AddScoped<IValidator<CreateBikeDto>, CreateBikeDtoValidator>();
 builder.Services.AddScoped<IValidator<UpdateBikeDto>, UpdateBikeDtoValidator>();
 builder.Services.AddScoped<IValidator<CreateSpecificationDto>, CreateSpecificationDtoValidator>();
+builder.Services.AddScoped<IValidator<UpdateSpecificationDto>, UpdateSpecificationDtoValidator>();
 
 
 builder.Services.AddDbContext<BikeShopDbContext>();
