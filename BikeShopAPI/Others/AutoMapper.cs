@@ -28,7 +28,7 @@ namespace BikeShopAPI.Others
             CreateMap<Bag, BagDto>();
             CreateMap<CreateBagDto, Bag>();
             CreateMap<UpdateBagDto, Bag>();
-
+            CreateMap<Product, ProductDto>();
         }
     }
 }

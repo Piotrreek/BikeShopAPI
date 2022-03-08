@@ -9,7 +9,7 @@ using BikeShopAPI.Models.Validators;
 using FluentValidation;
 using FluentValidation.AspNetCore;
 
-
+// dodac ProductController, autentykacja, autoryzacja, zamawianie, koszyk na zakupy, e-mail service
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
@@ -37,6 +37,7 @@ builder.Services.AddScoped<IBikeShopService, BikeShopService>();
 builder.Services.AddScoped<IBikeService, BikeService>();
 builder.Services.AddScoped<ISpecificationService, SpecificationService>();
 builder.Services.AddScoped<IBagService, BagService>();
+builder.Services.AddScoped<IProductService, ProductService>();
 
 
 
