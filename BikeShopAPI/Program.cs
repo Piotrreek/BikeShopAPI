@@ -36,6 +36,7 @@ builder.Services.AddScoped<BikeShopSeeder>();
 builder.Services.AddScoped<IBikeShopService, BikeShopService>();
 builder.Services.AddScoped<IBikeService, BikeService>();
 builder.Services.AddScoped<ISpecificationService, SpecificationService>();
+builder.Services.AddScoped<IBagService, BagService>();
 
 
 
