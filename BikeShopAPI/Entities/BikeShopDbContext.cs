@@ -11,9 +11,23 @@ namespace BikeShopAPI.Entities
         public DbSet<Bag>? Bags { get; set; }
         public DbSet<Product>? Products { get; set; }
         public DbSet<Specification>? Specifications { get; set; }
+        public DbSet<User> ? Users { get; set; }
+        public DbSet<Role> Roles { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            modelBuilder.Entity<User>()
+                .Property(u => u.EMailAddress)
+                .IsRequired();
+            modelBuilder.Entity<User>()
+                .Property(u => u.UserName)
+                .IsRequired();
+            modelBuilder.Entity<User>()
+                .Property(u => u.Password)
+                .IsRequired();
+            modelBuilder.Entity<Role>()
+                .Property(r => r.Name)
+                .IsRequired();
             modelBuilder.Entity<BikeShop>()
                 .Property(s => s.Name)
                 .IsRequired()

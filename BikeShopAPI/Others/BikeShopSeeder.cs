@@ -21,10 +21,16 @@ namespace BikeShopAPI.Others
                     _dbContext.AddRange(shop);
                     _dbContext.SaveChanges();
                 }
+
+                if (!_dbContext.Roles.Any())
+                {
+                    var roles = GetRoles();
+                    _dbContext.AddRange(roles);
+                    _dbContext.SaveChanges();
+                }
             }
         }
-
-        public BikeShop GetShop()
+        private BikeShop GetShop()
         {
             BikeShop bikeShop = new BikeShop()
             {
@@ -85,6 +91,26 @@ namespace BikeShopAPI.Others
                 }
             };
             return bikeShop;
+        }
+
+        private IEnumerable<Role> GetRoles()
+        {
+            var roles = new List<Role>()
+            {
+                new Role()
+                {
+                    Name = "User"
+                },
+                new Role()
+                {
+                    Name = "Manager"
+                },
+                new Role()
+                {
+                    Name = "Admin"
+                }
+            };
+            return roles;
         }
     }
 }

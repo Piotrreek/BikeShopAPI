@@ -8,6 +8,7 @@ using BikeShopAPI.Models;
 using BikeShopAPI.Models.Validators;
 using FluentValidation;
 using FluentValidation.AspNetCore;
+using Microsoft.AspNetCore.Identity;
 
 // dodac ProductController, autentykacja, autoryzacja, zamawianie, koszyk na zakupy, e-mail service
 var builder = WebApplication.CreateBuilder(args);
@@ -23,12 +24,14 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddAutoMapper(Assembly.GetExecutingAssembly());
 builder.Services.AddScoped<ErrorHandlingMiddleware>();
+builder.Services.AddScoped<IPasswordHasher<User>, PasswordHasher<User>>();
 builder.Services.AddScoped<IValidator<CreateBikeShopDto>, CreateBikeShopDtoValidator>();
 builder.Services.AddScoped<IValidator<UpdateBikeShopDto>, UpdateBikeShopDtoValidator>();
 builder.Services.AddScoped<IValidator<CreateBikeDto>, CreateBikeDtoValidator>();
 builder.Services.AddScoped<IValidator<UpdateBikeDto>, UpdateBikeDtoValidator>();
 builder.Services.AddScoped<IValidator<CreateSpecificationDto>, CreateSpecificationDtoValidator>();
 builder.Services.AddScoped<IValidator<UpdateSpecificationDto>, UpdateSpecificationDtoValidator>();
+builder.Services.AddScoped<IValidator<RegisterUserDto>, RegisterUserDtoValidator>();
 
 
 builder.Services.AddDbContext<BikeShopDbContext>();
@@ -38,6 +41,7 @@ builder.Services.AddScoped<IBikeService, BikeService>();
 builder.Services.AddScoped<ISpecificationService, SpecificationService>();
 builder.Services.AddScoped<IBagService, BagService>();
 builder.Services.AddScoped<IProductService, ProductService>();
+builder.Services.AddScoped<IUserService, UserService>();
 
 
 
