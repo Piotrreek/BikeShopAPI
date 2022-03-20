@@ -35,7 +35,6 @@ namespace BikeShopAPI.Models.Validators
                     {
                         context.AddFailure("EMailAddress", "That E-mail is taken");
                     }
-
                 });
             RuleFor(u => u.RoleId)
                 .NotEmpty()

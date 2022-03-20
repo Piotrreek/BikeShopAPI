@@ -25,6 +25,11 @@ namespace BikeShopAPI.Middleware
                 context.Response.StatusCode = 200;
                 await context.Response.WriteAsync(nullException.Message);
             }
+            catch (BadRequestException badRequest)
+            {
+                context.Response.StatusCode = 400;
+                await context.Response.WriteAsync(badRequest.Message);
+            }
             catch (Exception e)
             {
                 context.Response.StatusCode = 500;

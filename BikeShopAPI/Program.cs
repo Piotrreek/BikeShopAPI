@@ -1,4 +1,5 @@
 using System.Reflection;
+using System.Text;
 using BikeShopAPI.Entities;
 using BikeShopAPI.Interfaces;
 using BikeShopAPI.Others;
@@ -9,17 +10,40 @@ using BikeShopAPI.Models.Validators;
 using FluentValidation;
 using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.IdentityModel.Tokens;
 
-// dodac ProductController, autentykacja, autoryzacja, zamawianie, koszyk na zakupy, e-mail service
+
+//  autentykacja, autoryzacja, zamawianie, koszyk na zakupy, e-mail service
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 
-builder.Services.AddControllers().AddFluentValidation();
+var authenticationSettings = new AuthenticationSettings();
+builder.Configuration.GetSection("Authentication").Bind(authenticationSettings);
+builder.Services.AddSingleton(authenticationSettings);
+builder.Services.AddAuthentication(option =>
+{
+    option.DefaultAuthenticateScheme = "Bearer";
+    option.DefaultScheme = "Bearer";
+    option.DefaultChallengeScheme = "Bearer";
+}).AddJwtBearer(cfg =>
+{
+    cfg.RequireHttpsMetadata = false;
+    cfg.SaveToken = true;
+    cfg.TokenValidationParameters = new TokenValidationParameters()
+    {
+        ValidIssuer = authenticationSettings.JwtIssuer,
+        ValidAudience = authenticationSettings.JwtIssuer,
+        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(authenticationSettings.JwtKey))
+    };
+});
+
+
 
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
-
+builder.Services.AddControllers().AddFluentValidation();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddAutoMapper(Assembly.GetExecutingAssembly());
@@ -61,6 +85,7 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseMiddleware<ErrorHandlingMiddleware>();
+app.UseAuthentication();
 app.UseHttpsRedirection();
 
 app.UseAuthorization();
