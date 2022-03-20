@@ -1,11 +1,13 @@
 ﻿using BikeShopAPI.Interfaces;
 using BikeShopAPI.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BikeShopAPI.Controllers
 {
     [Route("user")]
     [ApiController]
+    [Authorize]
     public class UserController : ControllerBase
     {
         private readonly IUserService _userService;
@@ -13,6 +15,7 @@ namespace BikeShopAPI.Controllers
         {
             _userService = userService;
         }
+        [AllowAnonymous]
         [HttpPost("register")]
         public ActionResult RegisterUser([FromBody]RegisterUserDto dto)
         {
@@ -25,6 +28,7 @@ namespace BikeShopAPI.Controllers
             _userService.Delete(dto);
             return Ok();
         }
+        [AllowAnonymous]
         [HttpPost("login")]
         public ActionResult Login([FromBody] LoginDto dto)
         {

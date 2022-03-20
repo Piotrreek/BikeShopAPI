@@ -1,11 +1,13 @@
 ﻿using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
+using BikeShopAPI.Authorization;
 using BikeShopAPI.Entities;
 using BikeShopAPI.Exceptions;
 using BikeShopAPI.Interfaces;
 using BikeShopAPI.Models;
 using BikeShopAPI.Others;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
@@ -17,9 +19,13 @@ namespace BikeShopAPI.Services
         private readonly BikeShopDbContext _context;
         private readonly IPasswordHasher<User> _passwordHasher;
         private readonly AuthenticationSettings _authenticationSettings;
-        public UserService(BikeShopDbContext context, IPasswordHasher<User> passwordHasher, AuthenticationSettings authenticationSettings)
+        private readonly  IAuthorizationService _authorizationService;
+        private readonly IUserContextService _userContextService;
+        public UserService(BikeShopDbContext context, IPasswordHasher<User> passwordHasher, AuthenticationSettings authenticationSettings, IAuthorizationService authorizationService, IUserContextService userContextService)
         {
             _authenticationSettings = authenticationSettings;
+            _authorizationService = authorizationService;
+            _userContextService = userContextService;
             _context = context;
             _passwordHasher = passwordHasher;
         }
@@ -45,6 +51,12 @@ namespace BikeShopAPI.Services
             if (user is null)
             {
                 throw new BadRequestException("Wrong username, password or E-mail");
+            }
+            var authorizationResult = _authorizationService
+                .AuthorizeAsync(_userContextService.User, user, new OperationRequirement(Operation.Delete)).Result;
+            if (!authorizationResult.Succeeded)
+            {
+                throw new ForbidException();
             }
             var checkPassword = _passwordHasher.VerifyHashedPassword(user, user.Password, dto.Password);
             if (checkPassword == PasswordVerificationResult.Failed)

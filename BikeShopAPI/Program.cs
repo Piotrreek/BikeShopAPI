@@ -1,5 +1,6 @@
 using System.Reflection;
 using System.Text;
+using BikeShopAPI.Authorization;
 using BikeShopAPI.Entities;
 using BikeShopAPI.Interfaces;
 using BikeShopAPI.Others;
@@ -9,6 +10,7 @@ using BikeShopAPI.Models;
 using BikeShopAPI.Models.Validators;
 using FluentValidation;
 using FluentValidation.AspNetCore;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
@@ -58,6 +60,10 @@ builder.Services.AddScoped<IValidator<UpdateSpecificationDto>, UpdateSpecificati
 builder.Services.AddScoped<IValidator<RegisterUserDto>, RegisterUserDtoValidator>();
 
 
+builder.Services.AddScoped<IAuthorizationHandler, UserServiceOperationRequirementHandler>();
+builder.Services.AddHttpContextAccessor();
+
+
 builder.Services.AddDbContext<BikeShopDbContext>();
 builder.Services.AddScoped<BikeShopSeeder>();
 builder.Services.AddScoped<IBikeShopService, BikeShopService>();
@@ -66,6 +72,7 @@ builder.Services.AddScoped<ISpecificationService, SpecificationService>();
 builder.Services.AddScoped<IBagService, BagService>();
 builder.Services.AddScoped<IProductService, ProductService>();
 builder.Services.AddScoped<IUserService, UserService>();
+builder.Services.AddScoped<IUserContextService, UserContextService>();
 
 
 

@@ -40,10 +40,10 @@ namespace BikeShopAPI.Models.Validators
                 .NotEmpty()
                 .Custom((value, context) =>
                 {
-                    if (value == 3)
-                    {
-                        context.AddFailure("RoleId", "U can not assign yourself this role!");
-                    }
+                   // if (value == 3)
+                   // {
+                   //     context.AddFailure("RoleId", "U can not assign yourself this role!");
+                    //}
                 });
         }
     }
