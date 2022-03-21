@@ -4,6 +4,7 @@ using BikeShopAPI.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BikeShopAPI.Migrations
 {
     [DbContext(typeof(BikeShopDbContext))]
-    partial class BikeShopDbContextModelSnapshot : ModelSnapshot
+    [Migration("20220321213301_UserContext")]
+    partial class UserContext
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -45,7 +47,7 @@ namespace BikeShopAPI.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Addresses", (string)null);
+                    b.ToTable("Addresses");
                 });
 
             modelBuilder.Entity("BikeShopAPI.Entities.Bag", b =>
@@ -86,7 +88,7 @@ namespace BikeShopAPI.Migrations
 
                     b.HasIndex("CreatedById");
 
-                    b.ToTable("Bags", (string)null);
+                    b.ToTable("Bags");
                 });
 
             modelBuilder.Entity("BikeShopAPI.Entities.Bike", b =>
@@ -133,7 +135,7 @@ namespace BikeShopAPI.Migrations
 
                     b.HasIndex("CreatedById");
 
-                    b.ToTable("Bikes", (string)null);
+                    b.ToTable("Bikes");
                 });
 
             modelBuilder.Entity("BikeShopAPI.Entities.BikeShop", b =>
@@ -171,7 +173,7 @@ namespace BikeShopAPI.Migrations
 
                     b.HasIndex("CreatedById");
 
-                    b.ToTable("BikeShops", (string)null);
+                    b.ToTable("BikeShops");
                 });
 
             modelBuilder.Entity("BikeShopAPI.Entities.Product", b =>
@@ -212,7 +214,7 @@ namespace BikeShopAPI.Migrations
 
                     b.HasIndex("CreatedById");
 
-                    b.ToTable("Products", (string)null);
+                    b.ToTable("Products");
                 });
 
             modelBuilder.Entity("BikeShopAPI.Entities.Role", b =>
@@ -229,7 +231,7 @@ namespace BikeShopAPI.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Roles", (string)null);
+                    b.ToTable("Roles");
                 });
 
             modelBuilder.Entity("BikeShopAPI.Entities.Specification", b =>
@@ -266,7 +268,7 @@ namespace BikeShopAPI.Migrations
 
                     b.HasIndex("CreatedById");
 
-                    b.ToTable("Specifications", (string)null);
+                    b.ToTable("Specifications");
                 });
 
             modelBuilder.Entity("BikeShopAPI.Entities.User", b =>
@@ -299,7 +301,7 @@ namespace BikeShopAPI.Migrations
 
                     b.HasIndex("RoleId");
 
-                    b.ToTable("Users", (string)null);
+                    b.ToTable("Users");
                 });
 
             modelBuilder.Entity("BikeShopAPI.Entities.Bag", b =>

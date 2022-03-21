@@ -9,7 +9,7 @@ namespace BikeShopAPI.Authorization
         protected override Task HandleRequirementAsync(AuthorizationHandlerContext context, OperationRequirement requirement, User user)
         {
             var value = context.User.FindFirst(c => c.Type == ClaimTypes.NameIdentifier)?.Value;
-            if (value != null && (int.Parse(value) == user.Id ||
+            if (value != null && (int.Parse(value) == user.Id || 
                                   context.User.FindFirst(c => c.Type == ClaimTypes.Role)?.Value == "Admin"))
             {
                 context.Succeed(requirement);

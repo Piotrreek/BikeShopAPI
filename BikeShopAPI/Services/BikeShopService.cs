@@ -1,19 +1,25 @@
-﻿using System.Globalization;
-using AutoMapper;
+﻿using AutoMapper;
+using BikeShopAPI.Authorization;
 using BikeShopAPI.Entities;
+using BikeShopAPI.Exceptions;
 using BikeShopAPI.Interfaces;
 using BikeShopAPI.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.EntityFrameworkCore;
 
 namespace BikeShopAPI.Services
 {
     public class BikeShopService : IBikeShopService
     {
+        private readonly IUserContextService _userContextService;
         private readonly BikeShopDbContext _context;
         private readonly IMapper _mapper;
-        public BikeShopService(BikeShopDbContext context, IMapper mapper)
+        private readonly IAuthorizationService _authorizationHandler;
+        public BikeShopService(BikeShopDbContext context, IMapper mapper, IUserContextService userContextService, IAuthorizationService authorizationHandler)
         {
             _mapper = mapper;
+            _userContextService = userContextService;
+            _authorizationHandler = authorizationHandler;
             _context = context;
         }
 
@@ -52,6 +58,7 @@ namespace BikeShopAPI.Services
         public int Create(CreateBikeShopDto dto)
         {
             var bikeShop = _mapper.Map<BikeShop>(dto);
+            bikeShop.CreatedById = _userContextService.GetUserId;
             _context.Add(bikeShop);
             _context.SaveChanges();
             return bikeShop.Id;
@@ -65,6 +72,14 @@ namespace BikeShopAPI.Services
             {
                 throw new NotFoundException("Bike shop not found");
             }
+            var authorizationResult = _authorizationHandler.AuthorizeAsync(_userContextService.User, bikeShopToDelete,
+                new OperationRequirement(Operation.Delete)).Result;
+            if (!authorizationResult.Succeeded)
+            {
+                throw new ForbidException();
+            }
+            var addressToDelete = _context.Addresses?.FirstOrDefault(a => a.Id == bikeShopToDelete.AddressId);
+            _context.Remove(addressToDelete);
             _context.Remove(bikeShopToDelete);
             _context.SaveChanges();
         }

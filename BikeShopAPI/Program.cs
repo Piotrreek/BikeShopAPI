@@ -61,9 +61,10 @@ builder.Services.AddScoped<IValidator<RegisterUserDto>, RegisterUserDtoValidator
 
 
 builder.Services.AddScoped<IAuthorizationHandler, UserServiceOperationRequirementHandler>();
+builder.Services.AddScoped<IAuthorizationHandler, BikeShopServiceOperationRequirementHandler>();
 builder.Services.AddHttpContextAccessor();
 
-
+builder.Services.AddScoped<IUserContextService, UserContextService>();
 builder.Services.AddDbContext<BikeShopDbContext>();
 builder.Services.AddScoped<BikeShopSeeder>();
 builder.Services.AddScoped<IBikeShopService, BikeShopService>();
@@ -72,7 +73,7 @@ builder.Services.AddScoped<ISpecificationService, SpecificationService>();
 builder.Services.AddScoped<IBagService, BagService>();
 builder.Services.AddScoped<IProductService, ProductService>();
 builder.Services.AddScoped<IUserService, UserService>();
-builder.Services.AddScoped<IUserContextService, UserContextService>();
+
 
 
 
