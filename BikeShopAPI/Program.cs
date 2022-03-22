@@ -12,11 +12,10 @@ using FluentValidation;
 using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 
 
-//  autentykacja, autoryzacja, zamawianie, koszyk na zakupy, e-mail service
+// zamawianie, koszyk na zakupy, e-mail service
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
@@ -62,8 +61,12 @@ builder.Services.AddScoped<IValidator<RegisterUserDto>, RegisterUserDtoValidator
 
 builder.Services.AddScoped<IAuthorizationHandler, UserServiceOperationRequirementHandler>();
 builder.Services.AddScoped<IAuthorizationHandler, BikeShopServiceOperationRequirementHandler>();
-builder.Services.AddHttpContextAccessor();
+builder.Services.AddScoped<IAuthorizationHandler, BikeServiceOperationRequirementHandler>();
+builder.Services.AddScoped<IAuthorizationHandler, BagServiceOperationRequirementHandler>();
+builder.Services.AddScoped<IAuthorizationHandler, ProductServiceOperationRequirementHandler>();
 
+
+builder.Services.AddHttpContextAccessor();
 builder.Services.AddScoped<IUserContextService, UserContextService>();
 builder.Services.AddDbContext<BikeShopDbContext>();
 builder.Services.AddScoped<BikeShopSeeder>();

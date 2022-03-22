@@ -1,8 +1,10 @@
 ﻿using AutoMapper;
+using BikeShopAPI.Authorization;
 using BikeShopAPI.Entities;
 using BikeShopAPI.Exceptions;
 using BikeShopAPI.Interfaces;
 using BikeShopAPI.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.EntityFrameworkCore;
 
 namespace BikeShopAPI.Services
@@ -11,10 +13,13 @@ namespace BikeShopAPI.Services
     {
         private readonly BikeShopDbContext _context;
         private readonly IMapper _mapper;
-
-        public ProductService(BikeShopDbContext context, IMapper mapper)
+        private readonly IAuthorizationService _authorizationService;
+        private readonly IUserContextService _userContextService;
+        public ProductService(BikeShopDbContext context, IMapper mapper, IAuthorizationService authorizationService, IUserContextService userContextService)
         {
             _mapper = mapper;
+            _authorizationService = authorizationService;
+            _userContextService = userContextService;
             _context = context;
         }
         public List<ProductDto> GetAll(int shopId)
@@ -28,7 +33,6 @@ namespace BikeShopAPI.Services
             }
             return productsDto;
         }
-
         public ProductDto Get(int shopId, int id)
         {
             var shop = CheckIfShopExists(shopId);
@@ -41,17 +45,16 @@ namespace BikeShopAPI.Services
             var productDto = _mapper.Map<ProductDto>(product);
             return productDto;
         }
-
         public int Create(int shopId, CreateProductDto dto)
         {
             var shop = CheckIfShopExists(shopId);
             var product = _mapper.Map<Product>(dto);
             product.BikeShopId = shopId;
+            product.CreatedById = _userContextService.GetUserId;
             _context.Add(product);
             _context.SaveChanges();
             return product.Id;
         }
-
         public void Delete(int shopId, int id)
         {
             var shop = CheckIfShopExists(shopId);
@@ -61,11 +64,15 @@ namespace BikeShopAPI.Services
             {
                 throw new NullSpecificationException("This shop does not have such product");
             }
-
+            var authorizationResult = _authorizationService
+                .AuthorizeAsync(_userContextService.User, product, new OperationRequirement(Operation.Delete)).Result;
+            if (!authorizationResult.Succeeded)
+            {
+                throw new ForbidException();
+            }
             _context.Remove(product);
             _context.SaveChanges();
         }
-
         public void Update(int shopId, int id, UpdateProductDto dto)
         {
             var shop = CheckIfShopExists(shopId);
@@ -75,10 +82,15 @@ namespace BikeShopAPI.Services
             {
                 throw new NullSpecificationException("This shop does not have such product");
             }
+            var authorizationResult = _authorizationService
+                .AuthorizeAsync(_userContextService.User, product, new OperationRequirement(Operation.Update)).Result;
+            if (!authorizationResult.Succeeded)
+            {
+                throw new ForbidException();
+            }
             product = _mapper.Map(dto, product);
             _context.SaveChanges();
         }
-
         private Product CheckIfProductExists(int productId)
         {
             var product = _context?.Products?

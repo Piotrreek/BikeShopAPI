@@ -1,8 +1,10 @@
 ﻿using AutoMapper;
+using BikeShopAPI.Authorization;
 using BikeShopAPI.Entities;
 using BikeShopAPI.Exceptions;
 using BikeShopAPI.Interfaces;
 using BikeShopAPI.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.EntityFrameworkCore;
 
 namespace BikeShopAPI.Services
@@ -11,13 +13,15 @@ namespace BikeShopAPI.Services
     {
         private readonly BikeShopDbContext _context;
         private readonly IMapper _mapper;
-
-        public BikeService(BikeShopDbContext context, IMapper mapper)
+        private readonly IUserContextService _userContextService;
+        private readonly IAuthorizationService _authorizationService;
+        public BikeService(BikeShopDbContext context, IMapper mapper, IUserContextService userContextService, IAuthorizationService authorizationService)
         {
             _context = context;
             _mapper = mapper;
+            _userContextService = userContextService;
+            _authorizationService = authorizationService;
         }
-
         public List<BikeDto> GetAll(int bikeShopId)
         {
             var shop = _context.BikeShops
@@ -32,7 +36,6 @@ namespace BikeShopAPI.Services
             var bikesDto = _mapper.Map<List<BikeDto>>(bikes);
             return bikesDto;
         }
-
         public BikeDto Get(int id)
         {
             CheckBike();
@@ -42,7 +45,6 @@ namespace BikeShopAPI.Services
             CheckBikeNull(bike);
             return _mapper.Map<BikeDto>(bike);
         }
-
         public int Create(int bikeShopId, CreateBikeDto dto)
         {
             var shop = _context.BikeShops
@@ -50,11 +52,11 @@ namespace BikeShopAPI.Services
             CheckShop(shop);
             var bike = _mapper.Map<Bike>(dto);
             bike.BikeShopId = bikeShopId;
+            bike.CreatedById = _userContextService.GetUserId;
             _context.Bikes?.Add(bike);
             _context.SaveChanges();
             return bike.Id;
         }
-
         public List<BikeDto> GetAllWithoutId()
         {
             CheckBike();
@@ -64,26 +66,34 @@ namespace BikeShopAPI.Services
             var bikesDto = _mapper.Map<List<BikeDto>>(bikes);
             return bikesDto;
         }
-
         public void Delete(int id)
         {
             var bike = _context.Bikes?
                 .FirstOrDefault(b => b.Id == id);
             CheckBikeNull(bike);
+            var authorizationResult = _authorizationService
+                .AuthorizeAsync(_userContextService.User, bike, new OperationRequirement(Operation.Delete)).Result;
+            if (!authorizationResult.Succeeded)
+            {
+                throw new ForbidException();
+            }
             _context?.Bikes?.Remove(bike);
             _context?.SaveChanges();
         }
-
         public void Update(int id, UpdateBikeDto dto)
         {
             var bike = _context.Bikes?
                 .FirstOrDefault(b => b.Id == id);
             CheckBikeNull(bike);
+            var authorizationResult = _authorizationService
+                .AuthorizeAsync(_userContextService.User, bike, new OperationRequirement(Operation.Delete)).Result;
+            if (!authorizationResult.Succeeded)
+            {
+                throw new ForbidException();
+            }
             bike = _mapper.Map(dto, bike);
             _context?.SaveChanges();
         }
-
-
         private void CheckShop(BikeShop? shop)
         {
             if (shop is null)
@@ -100,7 +110,6 @@ namespace BikeShopAPI.Services
                 throw new NotFoundException("Shop not found");
             }
         }
-
         private void CheckBike()
         {
             if (_context.Bikes is null)
@@ -108,7 +117,6 @@ namespace BikeShopAPI.Services
                 throw new NotFoundException("There aren't any bikes in database");
             }
         }
-
         private void CheckBikeNull(Bike? bike)
         {
             if (bike == null)

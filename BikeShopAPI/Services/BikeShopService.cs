@@ -22,7 +22,6 @@ namespace BikeShopAPI.Services
             _authorizationHandler = authorizationHandler;
             _context = context;
         }
-
         public BikeShopDto GetById(int id)
         {
             var shop = _context
@@ -38,7 +37,6 @@ namespace BikeShopAPI.Services
             var shopDto = _mapper.Map<BikeShopDto>(shop);
             return shopDto;
         }
-
         public List<BikeShopDto> GetAll()
         {
             var shops = _context
@@ -54,7 +52,6 @@ namespace BikeShopAPI.Services
             var shopsDto = _mapper.Map<List<BikeShopDto>>(shops);
             return shopsDto;
         }
-
         public int Create(CreateBikeShopDto dto)
         {
             var bikeShop = _mapper.Map<BikeShop>(dto);
@@ -63,7 +60,6 @@ namespace BikeShopAPI.Services
             _context.SaveChanges();
             return bikeShop.Id;
         }
-
         public void Delete(int id)
         {
             var bikeShopToDelete = _context.BikeShops
@@ -83,7 +79,6 @@ namespace BikeShopAPI.Services
             _context.Remove(bikeShopToDelete);
             _context.SaveChanges();
         }
-
         public void Update(int id, UpdateBikeShopDto dto)
         {
             var bikeShopToUpdate = _context.BikeShops
@@ -91,6 +86,11 @@ namespace BikeShopAPI.Services
             if (bikeShopToUpdate is null)
             {
                 throw new NotFoundException("Bike shop not found");
+            }
+            var authorizationResult = _authorizationHandler.AuthorizeAsync(_userContextService.User, bikeShopToUpdate, new OperationRequirement(Operation.Update)).Result;
+            if (!authorizationResult.Succeeded)
+            {
+                throw new ForbidException();
             }
             bikeShopToUpdate = _mapper.Map(dto, bikeShopToUpdate);
             _context.SaveChanges();
