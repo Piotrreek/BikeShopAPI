@@ -16,9 +16,9 @@ namespace BikeShopAPI.Controllers
             _orderService = orderService;
         }
         [Route("buy-now")]
-        public ActionResult BuyNow(BuyNowDto dto)
+        public ActionResult BuyNow([FromRoute]int id, BuyNowDto dto)
         {
-
+            _orderService.BuyNow(id, dto);
             return Ok();
         }
         public ActionResult AddToBasket()
