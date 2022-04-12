@@ -6,12 +6,12 @@ using BikeShopAPI.Models;
 
 namespace BikeShopAPI.Services
 {
-    public class OrderBikeService : IOrderService
+    public class OrderBagService : IOrderService
     {
         private readonly BikeShopDbContext _context;
         private readonly IMapper _mapper;
         private readonly IUserContextService _userContextService;
-        public OrderBikeService(BikeShopDbContext context, IMapper mapper, IUserContextService userContextService)
+        public OrderBagService(BikeShopDbContext context, IMapper mapper, IUserContextService userContextService)
         {
             _userContextService = userContextService;
             _mapper = mapper;
@@ -19,20 +19,20 @@ namespace BikeShopAPI.Services
         }
         public void BuyNow(int id, BuyNowDto dto)
         {
-            var bike = _context.Bikes?.FirstOrDefault(b => b.Id == id);
-            if (bike is null)
+            var bag = _context.Bags?.FirstOrDefault(b => b.Id == id);
+            if (bag is null)
             {
-                throw new NotFoundException("Bike not found");
+                throw new NotFoundException("Bag not found");
             }
-            if (bike.Count <= 0)
+            if (bag.Count <= 0)
             {
-                throw new OutOfStockException("This bike is out of stock");
+                throw new OutOfStockException("This bag is out of stock");
             }
-            bike.Count -= 1;
+            bag.Count -= 1;
             var order = _mapper.Map<Order>(dto);
-            order.Price = bike.Price;
+            order.Price = bag.Price;
             order.IsPaid = false;
-            order.ProductName = bike.Name;
+            order.ProductName = bag.Name;
             order.UserId = _userContextService.GetUserId;
             _context.Orders.Add(order);
             _context.SaveChanges();
@@ -40,16 +40,16 @@ namespace BikeShopAPI.Services
 
         public void AddToBasket(int id)
         {
-            var bike = _context.Bikes?.FirstOrDefault(b => b.Id == id);
-            if (bike is null)
+            var bag = _context.Bags?.FirstOrDefault(b => b.Id == id);
+            if (bag is null)
             {
                 throw new NotFoundException("Bike not found");
             }
-            if (bike.Count <= 0)
+            if (bag.Count <= 0)
             {
                 throw new OutOfStockException("This bike is out of stock");
             }
-            bike.Count -= 1;
+            bag.Count -= 1;
             var basket = _context.Baskets.FirstOrDefault(b => b.UserId == _userContextService.GetUserId);
             if (basket is null)
             {
@@ -64,12 +64,12 @@ namespace BikeShopAPI.Services
             }
             var basketOrder = new BasketOrder()
             {
-                Price = bike.Price,
-                ProductName = bike.Name,
+                Price = bag.Price,
+                ProductName = bag.Name,
                 BasketId = basket.Id,
                 UserId = _userContextService.GetUserId
             };
-            basket.Price += bike.Price;
+            basket.Price += bag.Price;
             _context.BasketOrders.Add(basketOrder);
             _context.SaveChanges();
         }
