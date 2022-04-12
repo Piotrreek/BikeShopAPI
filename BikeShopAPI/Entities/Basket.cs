@@ -1,11 +1,13 @@
-﻿namespace BikeShopAPI.Entities
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace BikeShopAPI.Entities
 {
-    public class Order
+    public class Basket
     {
+        [Key]
         public int Id { get; set; }
         public decimal Price { get; set; }
         public bool IsPaid { get; set; }
-        public string? ProductName { get; set; }
         public string? PhoneNumber { get; set; }
         public string? EMail { get; set; }
         public string? City { get; set; }

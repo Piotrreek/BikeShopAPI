@@ -14,6 +14,8 @@ namespace BikeShopAPI.Entities
         public DbSet<User> ? Users { get; set; }
         public DbSet<Role> Roles { get; set; }
         public DbSet<Order> Orders { get; set; }
+        public DbSet<Basket> Baskets { get; set; }
+        public DbSet<BasketOrder> BasketOrders { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -87,6 +89,15 @@ namespace BikeShopAPI.Entities
             modelBuilder.Entity<Specification>()
                 .Property(s => s.Name)
                 .IsRequired();
+            foreach (var entityType in modelBuilder.Model.GetEntityTypes())
+            {
+                var properties = entityType.ClrType.GetProperties().Where(p => p.PropertyType == typeof(decimal));
+
+                foreach (var property in properties)
+                {
+                    modelBuilder.Entity(entityType.Name).Property(property.Name).HasColumnType("decimal(18,2)");
+                }
+            }
         }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)

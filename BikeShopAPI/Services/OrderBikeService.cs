@@ -30,10 +30,47 @@ namespace BikeShopAPI.Services
             }
             bike.Count -= 1;
             var order = _mapper.Map<Order>(dto);
+            order.Price = bike.Price;
             order.IsPaid = false;
             order.ProductName = bike.Name;
             order.UserId = _userContextService.GetUserId;
             _context.Orders.Add(order);
+            _context.SaveChanges();
+        }
+
+        public void AddToBasket(int id)
+        {
+            var bike = _context.Bikes?.FirstOrDefault(b => b.Id == id);
+            if (bike is null)
+            {
+                throw new NotFoundException("Bike not found");
+            }
+            if (bike.Count <= 0)
+            {
+                throw new OutOfStockException("This bike is out of stock");
+            }
+            bike.Count -= 1;
+            var basket = _context.Baskets.FirstOrDefault(b => b.UserId == _userContextService.GetUserId);
+            if (basket is null)
+            {
+                basket = new Basket()
+                {
+                    Price = 0,
+                    IsPaid = false,
+                    UserId = _userContextService.GetUserId
+                };
+                _context.Baskets.Add(basket);
+                _context.SaveChanges();
+            }
+            var basketOrder = new BasketOrder()
+            {
+                Price = bike.Price,
+                ProductName = bike.Name,
+                BasketId = basket.Id,
+                UserId = _userContextService.GetUserId
+            };
+            basket.Price += bike.Price;
+            _context.BasketOrders.Add(basketOrder);
             _context.SaveChanges();
         }
     }

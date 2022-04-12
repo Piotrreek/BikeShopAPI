@@ -4,6 +4,7 @@ using BikeShopAPI.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BikeShopAPI.Migrations
 {
     [DbContext(typeof(BikeShopDbContext))]
-    partial class BikeShopDbContextModelSnapshot : ModelSnapshot
+    [Migration("20220412080734_Add_Basket_and_BasketOrder")]
+    partial class Add_Basket_and_BasketOrder
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -87,74 +89,6 @@ namespace BikeShopAPI.Migrations
                     b.HasIndex("CreatedById");
 
                     b.ToTable("Bags");
-                });
-
-            modelBuilder.Entity("BikeShopAPI.Entities.Basket", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
-
-                    b.Property<string>("City")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("EMail")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("HouseNumber")
-                        .HasColumnType("int");
-
-                    b.Property<bool>("IsPaid")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("PhoneNumber")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<decimal>("Price")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<string>("Street")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int?>("UserId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("Baskets");
-                });
-
-            modelBuilder.Entity("BikeShopAPI.Entities.BasketOrder", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
-
-                    b.Property<int>("BasketId")
-                        .HasColumnType("int");
-
-                    b.Property<decimal>("Price")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<string>("ProductName")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int?>("UserId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("BasketId");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("BasketOrders");
                 });
 
             modelBuilder.Entity("BikeShopAPI.Entities.Bike", b =>
@@ -426,32 +360,6 @@ namespace BikeShopAPI.Migrations
                     b.Navigation("CreatedBy");
 
                     b.Navigation("Shop");
-                });
-
-            modelBuilder.Entity("BikeShopAPI.Entities.Basket", b =>
-                {
-                    b.HasOne("BikeShopAPI.Entities.User", "User")
-                        .WithMany()
-                        .HasForeignKey("UserId");
-
-                    b.Navigation("User");
-                });
-
-            modelBuilder.Entity("BikeShopAPI.Entities.BasketOrder", b =>
-                {
-                    b.HasOne("BikeShopAPI.Entities.Basket", "Basket")
-                        .WithMany()
-                        .HasForeignKey("BasketId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("BikeShopAPI.Entities.User", "User")
-                        .WithMany()
-                        .HasForeignKey("UserId");
-
-                    b.Navigation("Basket");
-
-                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("BikeShopAPI.Entities.Bike", b =>

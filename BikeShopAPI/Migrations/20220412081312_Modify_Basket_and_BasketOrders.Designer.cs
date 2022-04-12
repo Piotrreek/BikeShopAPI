@@ -4,6 +4,7 @@ using BikeShopAPI.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BikeShopAPI.Migrations
 {
     [DbContext(typeof(BikeShopDbContext))]
-    partial class BikeShopDbContextModelSnapshot : ModelSnapshot
+    [Migration("20220412081312_Modify_Basket_and_BasketOrders")]
+    partial class Modify_Basket_and_BasketOrders
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -440,7 +442,7 @@ namespace BikeShopAPI.Migrations
             modelBuilder.Entity("BikeShopAPI.Entities.BasketOrder", b =>
                 {
                     b.HasOne("BikeShopAPI.Entities.Basket", "Basket")
-                        .WithMany()
+                        .WithMany("BasketOrders")
                         .HasForeignKey("BasketId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -545,6 +547,11 @@ namespace BikeShopAPI.Migrations
             modelBuilder.Entity("BikeShopAPI.Entities.Address", b =>
                 {
                     b.Navigation("Shop");
+                });
+
+            modelBuilder.Entity("BikeShopAPI.Entities.Basket", b =>
+                {
+                    b.Navigation("BasketOrders");
                 });
 
             modelBuilder.Entity("BikeShopAPI.Entities.Bike", b =>
