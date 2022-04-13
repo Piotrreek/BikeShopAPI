@@ -2,7 +2,7 @@
 
 namespace BikeShopAPI.Interfaces
 {
-    public interface IOrderService
+    public interface IOrderBikeService
     {
         public void BuyNow(int id, BuyNowDto dto);
         public void AddToBasket(int id);

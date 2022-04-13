@@ -10,8 +10,8 @@ namespace BikeShopAPI.Controllers
     [ApiController]
     public class OrderBikeController : ControllerBase
     {
-        private readonly IOrderService _orderService;
-        public OrderBikeController(IOrderService orderService)
+        private readonly IOrderBikeService _orderService;
+        public OrderBikeController(IOrderBikeService orderService)
         {
             _orderService = orderService;
         }

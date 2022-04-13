@@ -57,6 +57,7 @@ builder.Services.AddScoped<IValidator<UpdateBikeDto>, UpdateBikeDtoValidator>();
 builder.Services.AddScoped<IValidator<CreateSpecificationDto>, CreateSpecificationDtoValidator>();
 builder.Services.AddScoped<IValidator<UpdateSpecificationDto>, UpdateSpecificationDtoValidator>();
 builder.Services.AddScoped<IValidator<RegisterUserDto>, RegisterUserDtoValidator>();
+builder.Services.AddScoped<IValidator<BuyNowDto>, BuyNowDtoValidator>();
 
 
 builder.Services.AddScoped<IAuthorizationHandler, UserServiceOperationRequirementHandler>();
@@ -64,6 +65,7 @@ builder.Services.AddScoped<IAuthorizationHandler, BikeShopServiceOperationRequir
 builder.Services.AddScoped<IAuthorizationHandler, BikeServiceOperationRequirementHandler>();
 builder.Services.AddScoped<IAuthorizationHandler, BagServiceOperationRequirementHandler>();
 builder.Services.AddScoped<IAuthorizationHandler, ProductServiceOperationRequirementHandler>();
+
 
 
 builder.Services.AddHttpContextAccessor();
@@ -76,8 +78,9 @@ builder.Services.AddScoped<ISpecificationService, SpecificationService>();
 builder.Services.AddScoped<IBagService, BagService>();
 builder.Services.AddScoped<IProductService, ProductService>();
 builder.Services.AddScoped<IUserService, UserService>();
-builder.Services.AddScoped<IOrderService, OrderBikeService>();
-builder.Services.AddScoped<IOrderService, OrderBagService>();
+builder.Services.AddScoped<IOrderBikeService, OrderBikeService>();
+builder.Services.AddScoped<IOrderBikeService, OrderBikeService>();
+builder.Services.AddScoped<IOrderBagService, OrderBagService>();
 
 
 

@@ -6,7 +6,7 @@ using BikeShopAPI.Models;
 
 namespace BikeShopAPI.Services
 {
-    public class OrderBagService : IOrderService
+    public class OrderBagService : IOrderBagService
     {
         private readonly BikeShopDbContext _context;
         private readonly IMapper _mapper;
@@ -57,7 +57,8 @@ namespace BikeShopAPI.Services
                 {
                     Price = 0,
                     IsPaid = false,
-                    UserId = _userContextService.GetUserId
+                    UserId = _userContextService.GetUserId,
+                    BasketOrders = new List<BasketOrder>()
                 };
                 _context.Baskets.Add(basket);
                 _context.SaveChanges();
@@ -70,6 +71,7 @@ namespace BikeShopAPI.Services
                 UserId = _userContextService.GetUserId
             };
             basket.Price += bag.Price;
+            basket.BasketOrders.Add(basketOrder);
             _context.BasketOrders.Add(basketOrder);
             _context.SaveChanges();
         }
