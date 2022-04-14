@@ -81,6 +81,8 @@ builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IOrderBikeService, OrderBikeService>();
 builder.Services.AddScoped<IOrderBikeService, OrderBikeService>();
 builder.Services.AddScoped<IOrderBagService, OrderBagService>();
+builder.Services.AddScoped<IOrderProductService, OrderProductService>();
+builder.Services.AddScoped<IOrderService, OrderService>();
 
 
 
