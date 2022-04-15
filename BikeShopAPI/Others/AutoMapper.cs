@@ -33,6 +33,8 @@ namespace BikeShopAPI.Others
             CreateMap<UpdateProductDto, Product>();
             CreateMap<BuyNowDto, Order>();
             CreateMap<Order, OrderDto>();
+            CreateMap<BasketOrder, OrderDto>();
+            CreateMap<BuyNowDto, Basket>();
         }
     }
 }
