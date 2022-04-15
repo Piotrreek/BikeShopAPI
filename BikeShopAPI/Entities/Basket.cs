@@ -13,6 +13,7 @@ namespace BikeShopAPI.Entities
         public string? City { get; set; }
         public string? Street { get; set; }
         public int HouseNumber { get; set; }
+        public DateTime CreatedTime { get; set; }
         public int? UserId { get; set; }
         public ICollection<BasketOrder> BasketOrders { get; set; }
         public virtual User? User { get; set; }

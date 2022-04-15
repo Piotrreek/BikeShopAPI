@@ -3,6 +3,7 @@ using BikeShopAPI.Entities;
 using BikeShopAPI.Exceptions;
 using BikeShopAPI.Interfaces;
 using BikeShopAPI.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace BikeShopAPI.Services
 {
@@ -19,7 +20,11 @@ namespace BikeShopAPI.Services
         }
         public void BuyNow(int id, BuyNowDto dto)
         {
-            var bag = _context.Bags?.FirstOrDefault(b => b.Id == id);
+            var orders = _context.Orders.ToList();
+            var oldOrders = orders.Where(o => (DateTime.Now - o.CreatedTime).Days > 14).ToList();
+            _context.RemoveRange(oldOrders);
+            _context.SaveChanges();
+            var bag = _context.Bags?.Include(b => b.Shop).FirstOrDefault(b => b.Id == id);
             if (bag is null)
             {
                 throw new NotFoundException("Bag not found");
@@ -30,6 +35,8 @@ namespace BikeShopAPI.Services
             }
             bag.Count -= 1;
             var order = _mapper.Map<Order>(dto);
+            order.CreatedTime = DateTime.Now;
+            order.ShopCreatorId = bag.Shop.CreatedById;
             order.Price = bag.Price;
             order.IsPaid = false;
             order.ProductName = bag.Name;
@@ -40,7 +47,11 @@ namespace BikeShopAPI.Services
 
         public void AddToBasket(int id)
         {
-            var bag = _context.Bags?.FirstOrDefault(b => b.Id == id);
+            var orders = _context.BasketOrders.ToList();
+            var oldOrders = orders.Where(o => (DateTime.Now - o.CreatedTime).Days > 14).ToList();
+            _context.RemoveRange(oldOrders);
+            _context.SaveChanges();
+            var bag = _context.Bags?.Include(b => b.Shop).FirstOrDefault(b => b.Id == id);
             if (bag is null)
             {
                 throw new NotFoundException("Bike not found");
@@ -58,7 +69,8 @@ namespace BikeShopAPI.Services
                     Price = 0,
                     IsPaid = false,
                     UserId = _userContextService.GetUserId,
-                    BasketOrders = new List<BasketOrder>()
+                    BasketOrders = new List<BasketOrder>(),
+                    CreatedTime = DateTime.Now
                 };
                 _context.Baskets.Add(basket);
                 _context.SaveChanges();
@@ -68,8 +80,10 @@ namespace BikeShopAPI.Services
                 Price = bag.Price,
                 ProductName = bag.Name,
                 BasketId = basket.Id,
-                UserId = _userContextService.GetUserId
-            };
+                UserId = _userContextService.GetUserId,
+                CreatedTime = DateTime.Now,
+                ShopCreatorId = bag.Shop.CreatedById
+        };
             basket.Price += bag.Price;
             basket.BasketOrders.Add(basketOrder);
             _context.BasketOrders.Add(basketOrder);

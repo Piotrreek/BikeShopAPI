@@ -21,5 +21,12 @@ namespace BikeShopAPI.Controllers
             var orders = _orderService.GetOrders();
             return Ok(orders);
         }
+        [HttpGet("all")]
+        [Authorize(Roles = "Admin")]
+        public ActionResult<List<OrderDto>> GetAllOrders()
+        {
+            var orders = _orderService.GetAllOrders();
+            return Ok(orders);
+        }
     }
 }

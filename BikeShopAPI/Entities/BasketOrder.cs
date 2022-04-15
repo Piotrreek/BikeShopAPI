@@ -8,6 +8,8 @@ namespace BikeShopAPI.Entities
         public int Id { get; set; }
         public decimal Price { get; set; }
         public string? ProductName { get; set; }
+        public DateTime CreatedTime { get; set; }
+        public int? ShopCreatorId { get; set; }
         public int BasketId { get; set; }
         public virtual Basket Basket { get; set; }
         public int? UserId { get; set; }

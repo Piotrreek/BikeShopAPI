@@ -29,5 +29,14 @@ namespace BikeShopAPI.Services
             }
             return _mapper.Map<List<OrderDto>>(orders);
         }
+        public List<OrderDto> GetAllOrders()
+        {
+            var orders = _dbContext.Orders.ToList();
+            if (orders.Count == 0)
+            {
+                throw new NullSpecificationException("You do not have any orders");
+            }
+            return _mapper.Map<List<OrderDto>>(orders);
+        }
     }
 }
