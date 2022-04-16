@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using BikeShopAPI.Authorization;
 using BikeShopAPI.Entities;
 using BikeShopAPI.Exceptions;
 using BikeShopAPI.Interfaces;
@@ -12,13 +13,13 @@ namespace BikeShopAPI.Services
     {
         private readonly BikeShopDbContext _dbContext;
         private readonly IMapper _mapper;
-        private readonly IAuthorizationHandler _authorizationHandler;
+        private readonly IAuthorizationService _authorizationService;
         private readonly IUserContextService _userContextService;
-        public OrderService(BikeShopDbContext dbContext, IMapper mapper, IAuthorizationHandler authorizationHandler, IUserContextService userContextService)
+        public OrderService(BikeShopDbContext dbContext, IMapper mapper, IAuthorizationService authorizationService, IUserContextService userContextService)
         {
             _dbContext = dbContext;
             _mapper = mapper;
-            _authorizationHandler = authorizationHandler;
+            _authorizationService = authorizationService;
             _userContextService = userContextService;
         }
         public List<OrderDto> GetOrders()
@@ -69,6 +70,38 @@ namespace BikeShopAPI.Services
                 throw new NullSpecificationException("Your basket is empty");
             }
             _mapper.Map(dto, basket);
+            _dbContext.SaveChanges();
+        }
+        public void UpdateBasketStatus(int basketId)
+        {
+            var basket = _dbContext.Baskets.FirstOrDefault(b => b.Id == basketId);
+            if (basket is null)
+            {
+                throw new NullSpecificationException("Your basket is empty");
+            }
+            var authResult = _authorizationService
+                .AuthorizeAsync(_userContextService.User, basket, new OperationRequirement(Operation.Update)).Result;
+            if (!authResult.Succeeded)
+            {
+                throw new ForbidException();
+            }
+            basket.IsPaid = !basket.IsPaid;
+            _dbContext.SaveChanges();
+        }
+        public void UpdateOrderStatus(int orderId)
+        {
+            var order = _dbContext.Orders.FirstOrDefault(o => o.Id == orderId);
+            if (order is null)
+            {
+                throw new NotFoundException("Order not found");
+            }
+            var authResult = _authorizationService.AuthorizeAsync(_userContextService.User, order,
+                new OperationRequirement(Operation.Update)).Result;
+            if (!authResult.Succeeded)
+            {
+                throw new ForbidException();
+            }
+            order.IsPaid = !order.IsPaid;
             _dbContext.SaveChanges();
         }
     }

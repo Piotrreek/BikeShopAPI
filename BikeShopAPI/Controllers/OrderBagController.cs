@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace BikeShopAPI.Controllers
 {
     [Authorize]
-    [Route("bag/{id}/order")]
+    [Route("order/bag/{bagId}")]
     [ApiController]
     public class OrderBagController : ControllerBase
     {
@@ -16,15 +16,15 @@ namespace BikeShopAPI.Controllers
             _orderService = orderService;
         }
         [HttpPost("buy-now")]
-        public ActionResult BuyNow([FromRoute] int id, BuyNowDto dto)
+        public ActionResult BuyNow([FromRoute] int bagId, BuyNowDto dto)
         {
-            _orderService.BuyNow(id, dto);
+            _orderService.BuyNow(bagId, dto);
             return Ok();
         }
         [HttpPost("add-to-basket")]
-        public ActionResult AddToBasket([FromRoute] int id)
+        public ActionResult AddToBasket([FromRoute] int bagId)
         {
-            _orderService.AddToBasket(id);
+            _orderService.AddToBasket(bagId);
             return Ok();
         }
     }

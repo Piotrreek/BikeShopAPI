@@ -8,6 +8,7 @@ namespace BikeShopAPI.Entities
         public int Id { get; set; }
         public decimal Price { get; set; }
         public bool IsPaid { get; set; }
+        public int? ShopCreatorId { get; set; }
         public string? PhoneNumber { get; set; }
         public string? EMail { get; set; }
         public string? City { get; set; }

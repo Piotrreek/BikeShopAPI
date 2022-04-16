@@ -65,7 +65,8 @@ builder.Services.AddScoped<IAuthorizationHandler, BikeShopServiceOperationRequir
 builder.Services.AddScoped<IAuthorizationHandler, BikeServiceOperationRequirementHandler>();
 builder.Services.AddScoped<IAuthorizationHandler, BagServiceOperationRequirementHandler>();
 builder.Services.AddScoped<IAuthorizationHandler, ProductServiceOperationRequirementHandler>();
-
+builder.Services.AddScoped<IAuthorizationHandler, BasketServiceOperationRequirementHandler>();
+builder.Services.AddScoped<IAuthorizationHandler, OrderServiceOperationRequirementHandler>();
 
 
 builder.Services.AddHttpContextAccessor();

@@ -9,5 +9,7 @@ namespace BikeShopAPI.Interfaces
         public List<OrderDto> GetAllOrdersByUserId();
         public List<OrderDto> DisplayBasket();
         public void UpdateBasket(BuyNowDto dto);
+        public void UpdateBasketStatus(int basketId);
+        public void UpdateOrderStatus(int orderId);
     }
 }

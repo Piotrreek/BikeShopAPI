@@ -70,7 +70,8 @@ namespace BikeShopAPI.Services
                     IsPaid = false,
                     UserId = _userContextService.GetUserId,
                     BasketOrders = new List<BasketOrder>(),
-                    CreatedTime = DateTime.Now
+                    CreatedTime = DateTime.Now,
+                    ShopCreatorId = bike.Shop.CreatedById
                 };
                 _context.Baskets.Add(basket);
                 _context.SaveChanges();
