@@ -1,8 +1,12 @@
-﻿namespace BikeShopAPI.Entities
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace BikeShopAPI.Entities
 {
     public class BikeShop
     {
         public int Id { get; set; }
+        [Required]
+        [MaxLength(20)]
         public string? Name { get; set; }
         public string? Description { get; set; }
         public string? ContactEmail { get; set; }

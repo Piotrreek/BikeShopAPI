@@ -16,90 +16,17 @@ namespace BikeShopAPI.Entities
         public DbSet<Order> Orders { get; set; }
         public DbSet<Basket> Baskets { get; set; }
         public DbSet<BasketOrder> BasketOrders { get; set; }
-
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<User>()
-                .Property(u => u.EMailAddress)
-                .IsRequired();
-            modelBuilder.Entity<User>()
-                .Property(u => u.UserName)
-                .IsRequired();
-            modelBuilder.Entity<User>()
-                .Property(u => u.Password)
-                .IsRequired();
-            modelBuilder.Entity<Role>()
-                .Property(r => r.Name)
-                .IsRequired();
-            modelBuilder.Entity<BikeShop>()
-                .Property(s => s.Name)
-                .IsRequired()
-                .HasMaxLength(20);
-            modelBuilder.Entity<Bike>()
-                .Property(b => b.Name)
-                .IsRequired()
-                .HasMaxLength(15);
-            modelBuilder.Entity<Bike>()
-                .Property(b => b.Brand)
-                .IsRequired()
-                .HasMaxLength(15);
-            modelBuilder.Entity<Bike>()
-                .Property(b => b.Price)
-                .IsRequired();
-            modelBuilder.Entity<Bike>()
-                .Property(b => b.Count)
-                .IsRequired()
-                .HasMaxLength(5);
-            modelBuilder.Entity<Address>()
-                .Property(a => a.Street)
-                .IsRequired()
-                .HasMaxLength(20);
-            modelBuilder.Entity<Address>()
-                .Property(a => a.City)
-                .IsRequired()
-                .HasMaxLength(15);
-            modelBuilder.Entity<Bag>()
-                .Property(b => b.Name)
-                .IsRequired();
-            modelBuilder.Entity<Bag>()
-                .Property(b => b.Brand)
-                .IsRequired();
-            modelBuilder.Entity<Bag>()
-                .Property(b => b.Count)
-                .IsRequired();
-            modelBuilder.Entity<Bag>()
-                .Property(b => b.Price)
-                .IsRequired();
-            modelBuilder.Entity<Product>()
-                .Property(p => p.Name)
-                .IsRequired();
-            modelBuilder.Entity<Product>()
-                .Property(p => p.Count)
-                .IsRequired();
-            modelBuilder.Entity<Product>()
-                .Property(p => p.Price)
-                .IsRequired();
-
-            modelBuilder.Entity<Product>()
-                .Property(p => p.Brand)
-                .IsRequired();
-            modelBuilder.Entity<Specification>()
-                .Property(s => s.Brand)
-                .IsRequired();
-            modelBuilder.Entity<Specification>()
-                .Property(s => s.Name)
-                .IsRequired();
             foreach (var entityType in modelBuilder.Model.GetEntityTypes())
             {
                 var properties = entityType.ClrType.GetProperties().Where(p => p.PropertyType == typeof(decimal));
-
                 foreach (var property in properties)
                 {
                     modelBuilder.Entity(entityType.Name).Property(property.Name).HasColumnType("decimal(18,2)");
                 }
             }
         }
-
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             optionsBuilder.UseSqlServer(_connectionString);

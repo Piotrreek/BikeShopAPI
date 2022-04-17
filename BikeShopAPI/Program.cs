@@ -15,7 +15,6 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.IdentityModel.Tokens;
 
 
-// zamawianie, koszyk na zakupy, e-mail service
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.

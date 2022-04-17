@@ -1,9 +1,13 @@
-﻿namespace BikeShopAPI.Entities
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace BikeShopAPI.Entities
 {
     public class Specification
     {
         public int Id { get; set; }
+        [Required]
         public string? Brand { get; set; }
+        [Required]
         public string? Name { get; set; }
         public int ProductionYear { get; set; }
         public string? Description { get; set; }
