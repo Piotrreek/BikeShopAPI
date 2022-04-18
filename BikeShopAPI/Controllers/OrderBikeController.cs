@@ -1,5 +1,6 @@
 ﻿using BikeShopAPI.Interfaces;
 using BikeShopAPI.Models;
+using FluentEmail.Core;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 

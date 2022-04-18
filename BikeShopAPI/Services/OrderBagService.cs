@@ -3,6 +3,7 @@ using BikeShopAPI.Entities;
 using BikeShopAPI.Exceptions;
 using BikeShopAPI.Interfaces;
 using BikeShopAPI.Models;
+using FluentEmail.Core;
 using Microsoft.EntityFrameworkCore;
 
 namespace BikeShopAPI.Services
@@ -12,9 +13,11 @@ namespace BikeShopAPI.Services
         private readonly BikeShopDbContext _context;
         private readonly IMapper _mapper;
         private readonly IUserContextService _userContextService;
-        public OrderBagService(BikeShopDbContext context, IMapper mapper, IUserContextService userContextService)
+        private readonly IFluentEmail _fluentEmail;
+        public OrderBagService(BikeShopDbContext context, IMapper mapper, IUserContextService userContextService, IFluentEmail fluentEmail)
         {
             _userContextService = userContextService;
+            _fluentEmail = fluentEmail;
             _mapper = mapper;
             _context = context;
         }
@@ -41,6 +44,10 @@ namespace BikeShopAPI.Services
             order.IsPaid = false;
             order.ProductName = bag.Name;
             order.UserId = _userContextService.GetUserId;
+            var email = _fluentEmail.To("adres@op.pl")
+                .Subject("BikeShop order")
+                .Body($"Thank you for purchase of {order.ProductName} in our shop. Please transfer {order.Price} PLN to bank account with number 0000000. If we receive money, we will prepare the order and send it to you.");
+            email.Send();
             _context.Orders.Add(order);
             _context.SaveChanges();
         }

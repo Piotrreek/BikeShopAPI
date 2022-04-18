@@ -1,3 +1,5 @@
+using System.Net;
+using System.Net.Mail;
 using System.Reflection;
 using System.Text;
 using BikeShopAPI.Authorization;
@@ -39,7 +41,11 @@ builder.Services.AddAuthentication(option =>
     };
 });
 
-
+var client = new SmtpClient("smtp.gmail.com", 587)
+{
+    Credentials = new NetworkCredential("adres@gmail.com", "password"),
+    EnableSsl = true
+};
 
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
@@ -47,6 +53,8 @@ builder.Services.AddControllers().AddFluentValidation();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddAutoMapper(Assembly.GetExecutingAssembly());
+builder.Services.AddFluentEmail("adres@gmail.com", "Bike Shop")
+    .AddSmtpSender(client);
 builder.Services.AddScoped<ErrorHandlingMiddleware>();
 builder.Services.AddScoped<IPasswordHasher<User>, PasswordHasher<User>>();
 builder.Services.AddScoped<IValidator<CreateBikeShopDto>, CreateBikeShopDtoValidator>();
