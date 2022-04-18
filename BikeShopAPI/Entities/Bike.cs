@@ -5,16 +5,9 @@ namespace BikeShopAPI.Entities
     public class Bike
     {
         public int Id { get; set; }
-        [Required]
-        [MaxLength(15)]
         public string? Brand { get; set; }
-        [Required]
-        [MaxLength(15)]
         public string? Name { get; set; }
-        [Required]
         public decimal Price { get; set; }
-        [Required]
-        [MaxLength(5)]
         public int Count { get; set; }
         public string? Description { get; set; }
         public string? ProductionYear { get; set; }

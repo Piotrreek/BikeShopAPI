@@ -98,7 +98,6 @@ namespace BikeShopAPI.Services
             {
                 throw new NotFoundException("Shop not found");
             }
-
             return shop;
         }
     }

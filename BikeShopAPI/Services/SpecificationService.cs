@@ -25,17 +25,26 @@ namespace BikeShopAPI.Services
         }
         public List<SpecificationDto> GetSpecOfBike(int bikeId)
         {
-            var bike = CheckIfThereIsGoodBikeInContext(bikeId);
+            var isBike = CheckIfThereIsGoodBikeInContext(bikeId);
+            var bike = _context.Bikes?
+                .FirstOrDefault(b => b.Id == bikeId);
             var spec = _context.Specifications?
                 .Where(s => s.BikeId == bikeId)
                 .ToList();
-            CheckIfSpecIsNull(spec);
+            var isSpec = CheckIfSpecIsNull(spec);
+            if (isSpec == false)
+            {
+                throw new NullSpecificationException("This bike does not have any specification assigned");
+            }
             var specDto = _mapper.Map<List<SpecificationDto>>(spec);
             return specDto;
         }
         public void Create(int bikeId, CreateSpecificationDto dto)
         {
-            var bike = CheckIfThereIsGoodBikeInContext(bikeId);
+            var isBike = CheckIfThereIsGoodBikeInContext(bikeId);
+            var bike = _context.Bikes?
+                .Include(b => b.Specification)
+                .FirstOrDefault(b => b.Id == bikeId);
             var authorizationResult = _authorizationService.AuthorizeAsync(_userContextService.User, bike,
                 new OperationRequirement(Operation.Update)).Result;
             if (!authorizationResult.Succeeded)
@@ -50,7 +59,10 @@ namespace BikeShopAPI.Services
         }
         public void Delete(int bikeId)
         {
-            var bike = CheckIfThereIsGoodBikeInContext(bikeId);
+            var isBike = CheckIfThereIsGoodBikeInContext(bikeId);
+            var bike = _context.Bikes?
+                .Include(b => b.Specification)
+                .FirstOrDefault(b => b.Id == bikeId);
             var authorizationResult = _authorizationService.AuthorizeAsync(_userContextService.User, bike,
                 new OperationRequirement(Operation.Update)).Result;
             if (!authorizationResult.Succeeded)
@@ -60,7 +72,11 @@ namespace BikeShopAPI.Services
             var spec = _context.Specifications?
                 .Where(s => s.BikeId == bikeId)
                 .ToList();
-            CheckIfSpecIsNull(spec);
+            var isSpec = CheckIfSpecIsNull(spec);
+            if (isSpec == false)
+            {
+                throw new NullSpecificationException("This bike does not have any specification assigned");
+            }
             _context.RemoveRange(spec);
             _context.SaveChanges();
         }
@@ -96,27 +112,15 @@ namespace BikeShopAPI.Services
             spec = _mapper.Map(dto, spec);
             _context.SaveChanges();
         }
-        private static void CheckIfSpecIsNull(List<Specification>? spec)
+        private static bool CheckIfSpecIsNull(List<Specification>? spec)
         {
-            if (spec?.Count == 0)
-            {
-                throw new NullSpecificationException("This bike does not have any specification assigned");
-            }
+            return spec?.Count > 0;
         }
-        private Bike CheckIfThereIsGoodBikeInContext(int bikeId)
+        private bool CheckIfThereIsGoodBikeInContext(int bikeId)
         {
-            if (_context.Bikes is null)
-            {
-                throw new NotFoundException("We do not have such a bike");
-            }
-            var bike = _context.Bikes
-                .Include(b => b.Specification)
+            var bike = _context.Bikes?
                 .FirstOrDefault(b => b.Id == bikeId);
-            if (bike == null)
-            {
-                throw new NotFoundException("We do not have such a bike");
-            }
-            return bike;
+            return bike != null;
         }
     }
 }

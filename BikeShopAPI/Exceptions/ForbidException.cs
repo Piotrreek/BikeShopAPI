@@ -1,6 +1,10 @@
 ﻿namespace BikeShopAPI.Exceptions
 {
-    public class ForbidException : Exception
+    public class ForbidException : BikeShopException
     {
+        public ForbidException(string message) : base(message)
+        {}
+        public ForbidException()
+        {}
     }
 }

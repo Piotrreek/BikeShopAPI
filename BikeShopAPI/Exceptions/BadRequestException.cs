@@ -1,6 +1,6 @@
 ﻿namespace BikeShopAPI.Exceptions
 {
-    public class BadRequestException : Exception
+    public class BadRequestException : BikeShopException
     {
         public BadRequestException(string message) : base(message) { }
     }

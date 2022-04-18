@@ -26,8 +26,16 @@ namespace BikeShopAPI.Services
         {
             var shop = _context.BikeShops
                 .FirstOrDefault(s => s.Id == bikeShopId);
-            CheckShop(shop);
-            CheckBike();
+            var isShop = CheckShop(shop);
+            if (isShop == false)
+            {
+                
+            }
+            var isBike = CheckBike();
+            if (isBike == false)
+            {
+                throw new NotFoundException("There are not any bike in our shop");
+            }
             var allBikes = _context.Bikes?
                 .Include(b => b.Specification);
             var bikes = allBikes?
@@ -38,18 +46,30 @@ namespace BikeShopAPI.Services
         }
         public BikeDto Get(int id)
         {
-            CheckBike();
+            var isBike = CheckBike();
+            if (isBike == false)
+            {
+                throw new NotFoundException("Bike not found");
+            }
             var bike = _context.Bikes?
                 .Include(b => b.Specification)
                 .FirstOrDefault(b => b.Id == id);
-            CheckBikeNull(bike);
+            var isBikeNull = CheckBikeNull(bike);
+            if (isBikeNull == false)
+            {
+                throw new NotFoundException("Bike not found");
+            }
             return _mapper.Map<BikeDto>(bike);
         }
         public int Create(int bikeShopId, CreateBikeDto dto)
         {
             var shop = _context.BikeShops
                 .FirstOrDefault(s => s.Id == bikeShopId);
-            CheckShop(shop);
+            var isShop = CheckShop(shop);
+            if (isShop == false)
+            {
+                throw new NotFoundException("Shop not found");
+            }
             var bike = _mapper.Map<Bike>(dto);
             bike.BikeShopId = bikeShopId;
             bike.CreatedById = _userContextService.GetUserId;
@@ -59,7 +79,11 @@ namespace BikeShopAPI.Services
         }
         public List<BikeDto> GetAllWithoutId()
         {
-            CheckBike();
+            var isBikeInDb = CheckBike();
+            if (isBikeInDb == false)
+            {
+                throw new NotFoundException("There are not any bikes in our database");
+            }
             var bikes = _context?.Bikes?
                 .Include(b => b.Specification)
                 .ToList();
@@ -70,7 +94,11 @@ namespace BikeShopAPI.Services
         {
             var bike = _context.Bikes?
                 .FirstOrDefault(b => b.Id == id);
-            CheckBikeNull(bike);
+            var isBikeNull = CheckBikeNull(bike);
+            if (isBikeNull == false)
+            {
+                throw new NotFoundException("Bike not found");
+            }
             var authorizationResult = _authorizationService
                 .AuthorizeAsync(_userContextService.User, bike, new OperationRequirement(Operation.Delete)).Result;
             if (!authorizationResult.Succeeded)
@@ -84,7 +112,11 @@ namespace BikeShopAPI.Services
         {
             var bike = _context.Bikes?
                 .FirstOrDefault(b => b.Id == id);
-            CheckBikeNull(bike);
+            var isBikeNull = CheckBikeNull(bike);
+            if (isBikeNull == false)
+            {
+                throw new NotFoundException("Bike not found");
+            }
             var authorizationResult = _authorizationService
                 .AuthorizeAsync(_userContextService.User, bike, new OperationRequirement(Operation.Delete)).Result;
             if (!authorizationResult.Succeeded)
@@ -94,35 +126,23 @@ namespace BikeShopAPI.Services
             bike = _mapper.Map(dto, bike);
             _context?.SaveChanges();
         }
-        private void CheckShop(BikeShop? shop)
+        private bool CheckShop(BikeShop? shop)
         {
-            if (shop is null)
-            {
-                throw new NotFoundException("Shop not found");
-            }
+            return shop != null;
         }
-        private void SearchBikeShop(int bikeShopId)
+        private bool SearchBikeShop(int bikeShopId)
         {
             var shop = _context.BikeShops
                 .FirstOrDefault(s => s.Id == bikeShopId);
-            if (shop is null)
-            {
-                throw new NotFoundException("Shop not found");
-            }
+            return shop != null;
         }
-        private void CheckBike()
+        private bool CheckBike()
         {
-            if (_context.Bikes is null)
-            {
-                throw new NotFoundException("There aren't any bikes in database");
-            }
+            return _context.Bikes != null;
         }
-        private void CheckBikeNull(Bike? bike)
+        private bool CheckBikeNull(Bike? bike)
         {
-            if (bike == null)
-            {
-                throw new NotFoundException("We do not have such a bike");
-            }
+            return bike != null;
         }
     }
 }

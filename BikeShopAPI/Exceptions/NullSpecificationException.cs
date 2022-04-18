@@ -1,6 +1,6 @@
 ﻿namespace BikeShopAPI.Exceptions
 {
-    public class NullSpecificationException : Exception
+    public class NullSpecificationException : BikeShopException
     {
         public NullSpecificationException(string message) : base(message)
         {
