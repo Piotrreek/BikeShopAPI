@@ -5,8 +5,13 @@ This is Bike Shop with possibility to manage shops, create accounts, order produ
 Technologies used in this project:
 
 .NET 6.0
+
 AutoMapper
+
 FluentValidation
+
 Entity Framework Core 
+
 JWT Tokens
+
 Swagger
