@@ -4,6 +4,7 @@ using BikeShopAPI.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BikeShopAPI.Migrations
 {
     [DbContext(typeof(BikeShopDbContext))]
-    partial class BikeShopDbContextModelSnapshot : ModelSnapshot
+    [Migration("20220524101646_aaaa")]
+    partial class aaaa
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -211,7 +213,7 @@ namespace BikeShopAPI.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
-                    b.Property<int?>("AddressId")
+                    b.Property<int>("AddressId")
                         .HasColumnType("int");
 
                     b.Property<string>("ContactEmail")
@@ -232,8 +234,7 @@ namespace BikeShopAPI.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("AddressId")
-                        .IsUnique()
-                        .HasFilter("[AddressId] IS NOT NULL");
+                        .IsUnique();
 
                     b.HasIndex("CreatedById");
 
@@ -475,7 +476,9 @@ namespace BikeShopAPI.Migrations
                 {
                     b.HasOne("BikeShopAPI.Entities.Address", "Address")
                         .WithOne("Shop")
-                        .HasForeignKey("BikeShopAPI.Entities.BikeShop", "AddressId");
+                        .HasForeignKey("BikeShopAPI.Entities.BikeShop", "AddressId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("BikeShopAPI.Entities.User", "CreatedBy")
                         .WithMany()

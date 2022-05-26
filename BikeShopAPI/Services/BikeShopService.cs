@@ -44,11 +44,6 @@ namespace BikeShopAPI.Services
                 .Include(s => s.Address)
                 .Include(s => s.Bikes)
                 .ToList();
-            if (shops is null)
-            {
-                throw new NotFoundException("Bike shops not found");
-            }
-
             var shopsDto = _mapper.Map<List<BikeShopDto>>(shops);
             return shopsDto;
         }

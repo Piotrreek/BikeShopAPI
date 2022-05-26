@@ -4,7 +4,6 @@ namespace BikeShopAPI.Entities
 {
     public class BikeShopDbContext : DbContext
     {
-        private string _connectionString = "Server=(localdb)\\mssqllocaldb;Database=BikeShopDb;Trusted_Connection=True;";
         public DbSet<BikeShop> BikeShops { get; set; }
         public DbSet<Bike>? Bikes { get; set; }
         public DbSet<Address>? Addresses { get; set; }
@@ -16,6 +15,7 @@ namespace BikeShopAPI.Entities
         public DbSet<Order> Orders { get; set; }
         public DbSet<Basket> Baskets { get; set; }
         public DbSet<BasketOrder> BasketOrders { get; set; }
+        public BikeShopDbContext(DbContextOptions<BikeShopDbContext> options) : base(options) {}
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             foreach (var entityType in modelBuilder.Model.GetEntityTypes())
@@ -26,10 +26,6 @@ namespace BikeShopAPI.Entities
                     modelBuilder.Entity(entityType.Name).Property(property.Name).HasColumnType("decimal(18,2)");
                 }
             }
-        }
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        {
-            optionsBuilder.UseSqlServer(_connectionString);
         }
     }
 }

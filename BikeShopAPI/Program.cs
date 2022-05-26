@@ -14,6 +14,7 @@ using FluentValidation;
 using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 
 
@@ -78,7 +79,7 @@ builder.Services.AddScoped<IAuthorizationHandler, OrderServiceOperationRequireme
 
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddScoped<IUserContextService, UserContextService>();
-builder.Services.AddDbContext<BikeShopDbContext>();
+builder.Services.AddDbContext<BikeShopDbContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("BikeShopDbConnection")));
 builder.Services.AddScoped<BikeShopSeeder>();
 builder.Services.AddScoped<IBikeShopService, BikeShopService>();
 builder.Services.AddScoped<IBikeService, BikeService>();
@@ -119,3 +120,5 @@ app.UseAuthorization();
 app.MapControllers();
 
 app.Run();
+
+public partial class Program {}
