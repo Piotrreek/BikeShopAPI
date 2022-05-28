@@ -12,23 +12,19 @@ namespace BikeShopAPI.Services
     public class BikeShopService : IBikeShopService
     {
         private readonly IUserContextService _userContextService;
-        private readonly BikeShopDbContext _context;
+        private readonly IBikeShopRepository _repository;
         private readonly IMapper _mapper;
         private readonly IAuthorizationService _authorizationHandler;
-        public BikeShopService(BikeShopDbContext context, IMapper mapper, IUserContextService userContextService, IAuthorizationService authorizationHandler)
+        public BikeShopService(IBikeShopRepository repository, IMapper mapper, IUserContextService userContextService, IAuthorizationService authorizationHandler)
         {
             _mapper = mapper;
             _userContextService = userContextService;
             _authorizationHandler = authorizationHandler;
-            _context = context;
+            _repository = repository;
         }
         public BikeShopDto GetById(int id)
         {
-            var shop = _context
-                .BikeShops
-                .Include(s => s.Address)
-                .Include(s => s.Bikes)
-                .FirstOrDefault(s => s.Id == id);
+            var shop = _repository.GetById(id);
             if (shop == null)
             {
                 throw new NotFoundException("Bike shop not found");
@@ -39,11 +35,7 @@ namespace BikeShopAPI.Services
         }
         public List<BikeShopDto> GetAll()
         {
-            var shops = _context
-                .BikeShops
-                .Include(s => s.Address)
-                .Include(s => s.Bikes)
-                .ToList();
+            var shops = _repository.GetAll();
             var shopsDto = _mapper.Map<List<BikeShopDto>>(shops);
             return shopsDto;
         }
@@ -51,14 +43,12 @@ namespace BikeShopAPI.Services
         {
             var bikeShop = _mapper.Map<BikeShop>(dto);
             bikeShop.CreatedById = _userContextService.GetUserId;
-            _context.Add(bikeShop);
-            _context.SaveChanges();
+            _repository.Insert(bikeShop);
             return bikeShop.Id;
         }
         public void Delete(int id)
         {
-            var bikeShopToDelete = _context.BikeShops
-                .FirstOrDefault(s => s.Id == id);
+            var bikeShopToDelete = _repository.GetById(id);
             if (bikeShopToDelete is null)
             {
                 throw new NotFoundException("Bike shop not found");
@@ -69,15 +59,11 @@ namespace BikeShopAPI.Services
             {
                 throw new ForbidException();
             }
-            var addressToDelete = _context.Addresses?.FirstOrDefault(a => a.Id == bikeShopToDelete.AddressId);
-            _context.Remove(addressToDelete);
-            _context.Remove(bikeShopToDelete);
-            _context.SaveChanges();
+            _repository.Delete(bikeShopToDelete);
         }
         public void Update(int id, UpdateBikeShopDto dto)
         {
-            var bikeShopToUpdate = _context.BikeShops
-                .FirstOrDefault(s => s.Id == id);
+            var bikeShopToUpdate = _repository.GetById(id);
             if (bikeShopToUpdate is null)
             {
                 throw new NotFoundException("Bike shop not found");
@@ -88,7 +74,7 @@ namespace BikeShopAPI.Services
                 throw new ForbidException();
             }
             bikeShopToUpdate = _mapper.Map(dto, bikeShopToUpdate);
-            _context.SaveChanges();
+            _repository.Update(bikeShopToUpdate);
         }
     }
 }

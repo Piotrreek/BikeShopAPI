@@ -10,6 +10,7 @@ using BikeShopAPI.Services;
 using BikeShopAPI.Middleware;
 using BikeShopAPI.Models;
 using BikeShopAPI.Models.Validators;
+using BikeShopAPI.Repositories;
 using FluentValidation;
 using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Authorization;
@@ -92,6 +93,7 @@ builder.Services.AddScoped<IOrderBikeService, OrderBikeService>();
 builder.Services.AddScoped<IOrderBagService, OrderBagService>();
 builder.Services.AddScoped<IOrderProductService, OrderProductService>();
 builder.Services.AddScoped<IOrderService, OrderService>();
+builder.Services.AddScoped<IBikeShopRepository, BikeShopRepository>();
 
 
 
