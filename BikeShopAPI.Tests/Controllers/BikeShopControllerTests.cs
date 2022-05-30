@@ -38,14 +38,6 @@ namespace BikeShopAPI.Tests.Controllers
             _dbContext.BikeShops.Add(shop);
             _dbContext.SaveChanges();
         }
-        private void SeedAddress(Address address)
-        {
-            var scopeFactory = _factory.Services.GetService<IServiceScopeFactory>();
-            using var scope = scopeFactory.CreateScope();
-            var _dbContext = scope.ServiceProvider.GetService<BikeShopDbContext>();
-            _dbContext.Addresses.Add(address);
-            _dbContext.SaveChanges();
-        }
         private static IEnumerable<object[]> GetShopModels()
         {
             var list = new List<string>()
@@ -171,15 +163,8 @@ namespace BikeShopAPI.Tests.Controllers
         public async Task DeleteBikeShop_ForBikeShopOwner_ReturnsNoContent()
         {
             // arrange
-            var address = new Address()
-            {
-                City = "city",
-                Street = "street"
-            };
-            SeedAddress(address);
             var bikeShop = new BikeShop()
             {
-                AddressId = address.Id,
                 CreatedById = 1,
                 Name = "name"
             };

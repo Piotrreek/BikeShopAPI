@@ -11,49 +11,28 @@ namespace BikeShopAPI.Services
 {
     public class BikeService : IBikeService
     {
-        private readonly BikeShopDbContext _context;
+        private readonly IBikeShopRepository _bikeShopRepository;
+        private readonly IBikeRepository _bikeRepository;
         private readonly IMapper _mapper;
         private readonly IUserContextService _userContextService;
         private readonly IAuthorizationService _authorizationService;
-        public BikeService(BikeShopDbContext context, IMapper mapper, IUserContextService userContextService, IAuthorizationService authorizationService)
+        public BikeService(IBikeShopRepository bikeShopRepository, IBikeRepository bikeRepository, IMapper mapper, IUserContextService userContextService, IAuthorizationService authorizationService)
         {
-            _context = context;
+            _bikeShopRepository = bikeShopRepository;
+            _bikeRepository = bikeRepository;
             _mapper = mapper;
             _userContextService = userContextService;
             _authorizationService = authorizationService;
         }
         public List<BikeDto> GetAll(int bikeShopId)
         {
-            var shop = _context.BikeShops
-                .FirstOrDefault(s => s.Id == bikeShopId);
-            var isShop = CheckShop(shop);
-            if (isShop == false)
-            {
-                
-            }
-            var isBike = CheckBike();
-            if (isBike == false)
-            {
-                throw new NotFoundException("There are not any bike in our shop");
-            }
-            var allBikes = _context.Bikes?
-                .Include(b => b.Specification);
-            var bikes = allBikes?
-                .Where(b => b.BikeShopId == bikeShopId)
-                .ToList();
+            var bikes = _bikeRepository.GetByShopId(bikeShopId);
             var bikesDto = _mapper.Map<List<BikeDto>>(bikes);
             return bikesDto;
         }
         public BikeDto Get(int id)
         {
-            var isBike = CheckBike();
-            if (isBike == false)
-            {
-                throw new NotFoundException("Bike not found");
-            }
-            var bike = _context.Bikes?
-                .Include(b => b.Specification)
-                .FirstOrDefault(b => b.Id == id);
+            var bike = _bikeRepository.GetById(id);
             var isBikeNull = CheckBikeNull(bike);
             if (isBikeNull == false)
             {
@@ -63,8 +42,7 @@ namespace BikeShopAPI.Services
         }
         public int Create(int bikeShopId, CreateBikeDto dto)
         {
-            var shop = _context.BikeShops
-                .FirstOrDefault(s => s.Id == bikeShopId);
+            var shop = _bikeShopRepository.GetById(bikeShopId);
             var isShop = CheckShop(shop);
             if (isShop == false)
             {
@@ -73,27 +51,19 @@ namespace BikeShopAPI.Services
             var bike = _mapper.Map<Bike>(dto);
             bike.BikeShopId = bikeShopId;
             bike.CreatedById = _userContextService.GetUserId;
-            _context.Bikes?.Add(bike);
-            _context.SaveChanges();
+            _bikeRepository.Insert(bike);
+            _bikeRepository.Save();
             return bike.Id;
         }
         public List<BikeDto> GetAllWithoutId()
         {
-            var isBikeInDb = CheckBike();
-            if (isBikeInDb == false)
-            {
-                throw new NotFoundException("There are not any bikes in our database");
-            }
-            var bikes = _context?.Bikes?
-                .Include(b => b.Specification)
-                .ToList();
+            var bikes = _bikeRepository.GetAll();
             var bikesDto = _mapper.Map<List<BikeDto>>(bikes);
             return bikesDto;
         }
         public void Delete(int id)
         {
-            var bike = _context.Bikes?
-                .FirstOrDefault(b => b.Id == id);
+            var bike = _bikeRepository.GetById(id);
             var isBikeNull = CheckBikeNull(bike);
             if (isBikeNull == false)
             {
@@ -105,13 +75,12 @@ namespace BikeShopAPI.Services
             {
                 throw new ForbidException();
             }
-            _context?.Bikes?.Remove(bike);
-            _context?.SaveChanges();
+            _bikeRepository.Delete(bike);
+            _bikeRepository.Save();
         }
         public void Update(int id, UpdateBikeDto dto)
         {
-            var bike = _context.Bikes?
-                .FirstOrDefault(b => b.Id == id);
+            var bike = _bikeRepository.GetById(id);
             var isBikeNull = CheckBikeNull(bike);
             if (isBikeNull == false)
             {
@@ -123,22 +92,14 @@ namespace BikeShopAPI.Services
             {
                 throw new ForbidException();
             }
+
             bike = _mapper.Map(dto, bike);
-            _context?.SaveChanges();
+            _bikeRepository.Update(bike);
+            _bikeRepository.Save();
         }
         private bool CheckShop(BikeShop? shop)
         {
             return shop != null;
-        }
-        private bool SearchBikeShop(int bikeShopId)
-        {
-            var shop = _context.BikeShops
-                .FirstOrDefault(s => s.Id == bikeShopId);
-            return shop != null;
-        }
-        private bool CheckBike()
-        {
-            return _context.Bikes != null;
         }
         private bool CheckBikeNull(Bike? bike)
         {
